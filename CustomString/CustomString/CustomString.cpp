@@ -1,6 +1,11 @@
 #include "CustomString.h"
 #include <string.h>
 
+static int KMP(const char* source, const char* pattern) {
+
+	return -1;
+}
+
 CustomString::CustomString(const char* _str)
 {
 	if (_str) {
@@ -90,6 +95,24 @@ CustomString CustomString::sub(int startIndex, int endIndex)
 std::vector<CustomString> CustomString::split(const char* _key)
 {
 	return std::vector<CustomString>();
+}
+
+int CustomString::find(const char* _target)
+{
+	int result = -1;
+	if (strlen(_target) == 0) {
+		return 0;
+	}
+
+	if (strlen(this->m_data) < strlen(_target)) {
+		return -1;
+	}
+
+	if (strlen(this->m_data) == strlen(_target)) {
+		return strcmp(this->m_data, _target) == 0;
+	}
+
+	return result;
 }
 
 void CustomString::setValueByOtherCustomString(const char* _other)

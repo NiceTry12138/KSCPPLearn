@@ -27,6 +27,8 @@ public:
 	CustomString sub(int startIndex = 0, int endIndex = -1);
 
 	std::vector<CustomString> split(const char* _key);
+
+	int find(const char* _target);
 protected:
 	void setValueByOtherCustomString(const char* _other);
 	
