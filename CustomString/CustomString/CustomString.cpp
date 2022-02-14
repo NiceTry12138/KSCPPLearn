@@ -169,15 +169,11 @@ std::vector<CustomString> CustomString::split(const char* _key)
 	int keyLen = strlen(_key);
 	std::vector<CustomString> result;
 	
-	char* res = new char[len() + 1];
-	memset(res, 0, len() + 1);
-	strcpy(res, m_data);
-
 	int findIndex = 0;
 	int lastIndex = 0;
 	while (findIndex != -1)
 	{
-		findIndex = KMP(res, _key, lastIndex);
+		findIndex = KMP(m_data, _key, lastIndex);
 		if (findIndex == -1)
 		{
 			result.push_back(CustomString(sub(lastIndex, len() - 1)));
@@ -189,9 +185,6 @@ std::vector<CustomString> CustomString::split(const char* _key)
 		
 		lastIndex = findIndex + keyLen;
 	}
-	int l1 = strlen(res);
-	int l2 = strlen(m_data);
-	delete[] res;
 	return result;
 }
 
