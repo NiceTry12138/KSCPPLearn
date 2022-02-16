@@ -45,6 +45,8 @@ int main() {
 	std::cout << "find es in str1 index : " << index << std::endl;
 	printVector(str1.split("e"));
 
+	CustomString test1 = str1;
+
 	system("pause");
 	return 0;
 }
