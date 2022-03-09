@@ -4,30 +4,56 @@
 
 #define RANDOM01 (static_cast <float> (rand()) / static_cast <float> (RAND_MAX))
 
-int SkipList::findDataByKey(int key)
+bool SkipList::findDataByKey(int key, int &data)
 {
+	std::cout << "find target node " << key << " => ";
 	auto result = findNodeByKey(m_Head, key);
 	if (result != nullptr)
 	{
-		return result->data;
+		data = result->data;
+		return true;
 	}
-	return 0;
+	std::cout << "not find " << key << std::endl;
+	return false;
 }
 
 void SkipList::deleteByKey(int key)
 {
+	std::cout << "delete target node " << key << " => ";
 	auto result = findNodeByKey(m_Head, key);
 	if (result == nullptr) {
 		return;
 	}
 
-	
+	for (int i = 0; i < result->NextNodes.size(); i++)
+	{
+		if (result->NextNodes[i] == nullptr || result->PreNodes[i] == nullptr)
+		{
+			continue;
+		}
 
+		result->NextNodes[i]->setPreNode(result, result->PreNodes[i]);
+		result->PreNodes[i]->setNextNode(result, result->NextNodes[i]);
+	}
+	delete result;
 	--m_Size;
 }
 
-void SkipList::insertNode(int key, int data)
+void SkipList::setNodeDataByKey(int key, int newData)
 {
+	auto result = findNodeByKey(m_Head, key);
+	result->data = newData;
+}
+
+bool SkipList::insertNode(int key, int data)
+{
+	std::cout << "insert target node " << key << " => ";
+	auto findNode = findNodeByKey(m_Head, key);
+	if (findNode != nullptr)
+	{
+		return false;
+	}
+
 	std::vector<ListNode*> path;
 	auto lessKeyNode = findLessNodeByKey(m_Head, key, path);
 	int level = randomLevel();
@@ -41,16 +67,21 @@ void SkipList::insertNode(int key, int data)
 		if (path[i]->NextNodes.size() > currentLevel && (path[i]->NextNodes[currentLevel] == nullptr|| path[i]->NextNodes[currentLevel]->key > key))
 		{
 			node->NextNodes[currentLevel] = path[i]->NextNodes[currentLevel];
-			//path[i]->NextNodes[currentLevel]->PreNodes[currentLevel] = node;
+			if (path[i]->NextNodes[currentLevel] != nullptr)
+			{
+				path[i]->NextNodes[currentLevel]->PreNodes[currentLevel] = node;
+			}
 
 			path[i]->NextNodes[currentLevel] = node;
-			//node->PreNodes[currentLevel] = path[i];
+			node->PreNodes[currentLevel] = path[i];
 
 			currentLevel++;
 		}
 	}
 
 	++m_Size;
+
+	return true;
 }
 
 void SkipList::PrintOneByOne()

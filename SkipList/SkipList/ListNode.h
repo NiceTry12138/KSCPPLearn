@@ -29,5 +29,23 @@ struct ListNode
 	bool isEqual(const ListNode& other) {
 		return other.data == this->data;
 	}
+
+	void setNextNode(ListNode* oldNode, ListNode* newNode) {
+		setNode(NextNodes, oldNode, newNode);
+	}
+
+	void setPreNode(ListNode* oldNode, ListNode* newNode) {
+		setNode(PreNodes, oldNode, newNode);
+	}
+
+protected:
+	void setNode(std::vector<ListNode*>& list, ListNode* oldNode, ListNode* newNode) {
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (list[i] == oldNode) {
+				list[i] = newNode;
+			}
+		}
+	}
 };
 

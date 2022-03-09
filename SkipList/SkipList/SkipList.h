@@ -7,9 +7,10 @@ using namespace std;
 class SkipList
 {
 public:
-	int findDataByKey(int key);
+	bool findDataByKey(int key, int &data);
 	void deleteByKey(int key);
-	void insertNode(int key, int data);
+	void setNodeDataByKey(int key, int newData);
+	bool insertNode(int key, int data);
 
 	void PrintOneByOne();
 
