@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <assert.h>
 
 namespace LeptJson {
 
@@ -29,7 +30,7 @@ namespace LeptJson {
 
 	struct lept_value {
 		union data {
-			lept_member* obj;				// object
+			std::vector<lept_member>* obj;				// object
 			std::vector<lept_value>* arr;	// array
 			std::string* str;				// string
 			double number;					// number
@@ -37,6 +38,8 @@ namespace LeptJson {
 		lept_type type;
 		lept_value() {
 			u.obj = nullptr;
+			u.arr = nullptr;
+			u.str = nullptr;
 			type = lept_type::LEPT_NULL;
 		}
 		~lept_value() {

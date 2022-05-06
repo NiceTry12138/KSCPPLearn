@@ -1,7 +1,8 @@
 #include <iostream>
 #include "define.h"
 #include "leptjson.h"
-#include <assert.h>
+#include <fstream>
+#include <sstream>
 using namespace std;
 
 void testprint(const LeptJson::lept_value& v) {
@@ -29,6 +30,11 @@ void testprint(const LeptJson::lept_value& v) {
 		}
 		break;
 	case lept_type::LEPT_OBJECT:
+		for (int i = 0; i < v.u.obj->size(); ++i)
+		{
+			std::cout << v.u.obj->at(i).key << " : ";
+			testprint(v.u.obj->at(i).v);
+		}
 		break;
 	default:
 		break;
@@ -48,15 +54,26 @@ void testJson() {
 	//LeptJsonClass::lept_parse_literal(c, v, "null", lept_type::LEPT_NULL);
 	//c.json = "-0.1234";
 	//LeptJsonClass::lept_parse_number(c, v) != lept_state::LEPT_PARSE_OK;
-	c.json = "\"qw\\n\"";
-	LeptJsonClass::lept_parse_string(c, v) != lept_state::LEPT_PARSE_OK;
+	//c.json = "\"qw\\n\"";
+	//LeptJsonClass::lept_parse_string(c, v) != lept_state::LEPT_PARSE_OK;
 	//c.json = "[[11, 22, 33], [\"1\", \"1\", \"1\"], [null, false, true], [1], []]";
 	//LeptJsonClass::lept_parse_array(c, v) != lept_state::LEPT_PARSE_OK;
 
-	testprint(v);
+	//std::ifstream t("test.txt");
+	//std::stringstream buffer;
+	//buffer << t.rdbuf();
+
+	//c.json = std::string(buffer.str());
+	//LeptJsonClass::lept_parse_object(c, v);
+
+	//testprint(v);
 }
 
 int main() {
-	testJson();
+	//testJson();
+	
+	LeptJsonClass js("test.txt");
+	testprint(js.m_root);
+
 	return 0;
 }

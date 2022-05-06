@@ -1,12 +1,23 @@
 #include "leptjson.h"
 #include <fstream>
+#include <sstream>
+using namespace std;
 
 LeptJsonClass::LeptJsonClass(std::string filepath)
 {
+	std::ifstream t(filepath);
+	std::stringstream buffer;
+	buffer << t.rdbuf();
+
+	LeptJson::lept_context c;
+
+	c.json = std::string(buffer.str());
+	LeptJsonClass::lept_parse_object(c, m_root);
 }
 
 LeptJsonClass::~LeptJsonClass()
 {
+	deleteAll(m_root);
 }
 
 lept_state LeptJsonClass::lept_parse_value(lept_context& c, lept_value& v)
@@ -150,7 +161,7 @@ lept_state LeptJsonClass::lept_parse_array(lept_context& c, lept_value& v)
 
 lept_state LeptJsonClass::lept_parse_object(lept_context& c, lept_value& v)
 {
-	++c.currentIndex;				// Ìø¹ý "
+	++c.currentIndex;				// Ìø¹ý {
 	lept_context_whitespace(c);
 	v.type = lept_type::LEPT_OBJECT;
 	if (c.getChar() == '}')
@@ -159,18 +170,17 @@ lept_state LeptJsonClass::lept_parse_object(lept_context& c, lept_value& v)
 		lept_set_object_null(v);
 		return lept_state::LEPT_PARSE_OK;
 	}
-	lept_member* member = new lept_member();
-	std::string* tempString = new std::string();
+	v.u.obj = new std::vector<lept_member>();
 	while (true)
 	{
+		std::string tempString;
 		if (c.getChar() != '\"')
 		{
-			delete tempString;
 			return lept_state::LEPT_PARSE_INVALID_VALUE;
 		}
-		if (lept_parse_string_row(c, tempString) != lept_state::LEPT_PARSE_OK)
+		++c.currentIndex;			// Ìø¹ý ¡°
+		if (lept_parse_string_row(c, &tempString) != lept_state::LEPT_PARSE_OK)
 		{
-			delete tempString;
 			return lept_state::LEPT_PARSE_INVALID_VALUE;
 		}
 		
@@ -182,18 +192,28 @@ lept_state LeptJsonClass::lept_parse_object(lept_context& c, lept_value& v)
 		++c.currentIndex;
 		lept_context_whitespace(c);
 
+		lept_member member;
+		member.key = std::string(tempString);
+		
 
+		if (lept_parse_value(c, member.v) != lept_state::LEPT_PARSE_OK)
+		{
+			return lept_state::LEPT_PARSE_INVALID_VALUE;
+		}
 
+		lept_context_whitespace(c);
 		if (c.getChar() == ',')
 		{
 			++c.currentIndex;
+			v.u.obj->push_back(member);
 			lept_context_whitespace(c);
 		}
 		else if (c.getChar() == '}')
 		{
 			++c.currentIndex;
 			v.type = lept_type::LEPT_OBJECT;
-			v.u.obj = member;
+			v.u.obj->push_back(member);
+			return lept_state::LEPT_PARSE_OK;
 		}
 		else {
 			return lept_state::LEPT_PARSE_INVALID_VALUE;
@@ -229,7 +249,7 @@ lept_state LeptJsonClass::lept_parse_string_row(lept_context& c, std::string* re
 		switch (c.getChar())
 		{
 		case '\"':
-			+c.currentIndex;
+			++c.currentIndex;
 			return lept_state::LEPT_PARSE_OK;
 			break;
 		case '\\':
@@ -272,4 +292,68 @@ void LeptJsonClass::lept_set_object_null(lept_value& v)
 {
 	v.u.obj = nullptr;
 	v.type = lept_type::LEPT_OBJECT;
+}
+
+void LeptJsonClass::deleteAll(lept_value& _item)
+{
+	switch (_item.type)
+	{		
+	case lept_type::LEPT_STRING:
+		delete _item.u.str;
+		break;
+	case lept_type::LEPT_ARRAY:
+		if (_item.u.arr == nullptr)
+		{
+			break;
+		}
+		for (int i = 0; i < _item.u.arr->size(); ++i) {
+			deleteAll(_item.u.arr->at(i));
+		}
+		delete _item.u.arr;
+		break;
+	case lept_type::LEPT_OBJECT:
+		if (_item.u.obj == nullptr)
+		{
+			break;
+		}
+		for (int i = 0; i < _item.u.obj->size(); ++i) {
+			deleteAll(_item.u.obj->at(i));
+		}
+		delete _item.u.obj;
+		break;
+	default:
+		break;
+	}
+}
+
+void LeptJsonClass::deleteAll(lept_member& _item)
+{
+	switch (_item.v.type)
+	{
+	case lept_type::LEPT_STRING:
+		delete _item.v.u.str;
+		break;
+	case lept_type::LEPT_ARRAY:
+		if (_item.v.u.arr == nullptr)
+		{
+			break;
+		}
+		for (int i = 0; i < _item.v.u.arr->size(); ++i) {
+			deleteAll(_item.v.u.arr->at(i));
+		}
+		delete _item.v.u.arr;
+		break;
+	case lept_type::LEPT_OBJECT:
+		if (_item.v.u.obj == nullptr)
+		{
+			break;
+		}
+		for (int i = 0; i < _item.v.u.obj->size(); ++i) {
+			deleteAll(_item.v.u.obj->at(i));
+		}
+		delete _item.v.u.obj;
+		break;
+	default:
+		break;
+	}
 }

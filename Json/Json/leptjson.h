@@ -7,9 +7,6 @@ using namespace LeptJson;
 class LeptJsonClass
 {
 public:
-	LeptJsonClass(std::string filepath);
-	~LeptJsonClass();
-
 //protected:
 	static lept_state lept_parse_value(lept_context& c, lept_value& v);		// ½âÎöÖµ
 	static void lept_context_whitespace(lept_context& c);					// Çå³ý¿Õ°××Ö·û
@@ -23,7 +20,18 @@ public:
 
 	static void lept_set_array_null(lept_value& v);
 	static void lept_set_object_null(lept_value& v);
+
+
+public:
+	LeptJsonClass(std::string filepath);
+	~LeptJsonClass();
+
+protected:
+	void deleteAll(lept_value& _item);
+	void deleteAll(lept_member& _item);
+
 private:
+public:
 	lept_context m_jsoncontext;
-	lept_member* m_root{ nullptr };
+	lept_value m_root;
 };
