@@ -18,15 +18,18 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="leptjson.cpp">
+    <ClCompile Include="SharedPtr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UniquePtr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="leptjson.h">
+    <ClInclude Include="SharedPtr.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="define.h">
+    <ClInclude Include="UniquePtr.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

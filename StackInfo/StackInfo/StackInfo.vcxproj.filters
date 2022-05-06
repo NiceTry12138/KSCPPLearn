@@ -15,18 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="leptjson.cpp">
+    <ClCompile Include="StackInfo.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="leptjson.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="define.h">
+    <ClInclude Include="StackInfo.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

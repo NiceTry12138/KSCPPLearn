@@ -18,15 +18,12 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="leptjson.cpp">
+    <ClCompile Include="SensitiveWordHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="leptjson.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="define.h">
+    <ClInclude Include="SensitiveWordHelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
