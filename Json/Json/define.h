@@ -44,6 +44,34 @@ namespace LeptJson {
 		}
 		~lept_value() {
 		}
+		bool GetBool() {
+			assert(type != lept_type::LEPT_NULL);
+			if (type == lept_type::LEPT_FALSE)
+			{
+				return false;
+			}
+			else if (type == lept_type::LEPT_TRUE)
+			{
+				return true;
+			}
+			assert(0);
+			return false;
+		}
+		std::string GetString() {
+			assert(type != lept_type::LEPT_STRING);
+			assert(u.str != nullptr);
+			return std::string(u.str->c_str());
+		}
+		double GetNumber() {
+			assert(type != lept_type::LEPT_NUMBER);
+			return u.number;
+		}
+		lept_value GetItemByArrayIndex(int index) {
+			assert(type != lept_type::LEPT_ARRAY);
+			assert(u.arr != nullptr);
+			assert(u.arr->size() > index);
+			return u.arr->at(index);
+		}
 	};
 
 	struct lept_member {
@@ -62,4 +90,16 @@ namespace LeptJson {
 			return currentIndex >= json.size();
 		}
 	};
+
+	static lept_value GetLeptValueObjectByKey(const lept_value& v, const std::string& key) {
+		assert(v.type != lept_type::LEPT_OBJECT);
+		assert(v.u.obj != nullptr);
+		for (int i = 0; i < v.u.obj->size(); ++i) {
+			if (v.u.obj->at(i).key == key)
+			{
+				return v.u.obj->at(i).v;
+			}
+		}
+		return lept_value();
+	}
 }
