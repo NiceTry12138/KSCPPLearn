@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include "Node.h"
 class PosManager
 {
 public:
@@ -17,5 +17,8 @@ protected:
 private:
 	int m_blockSize{ 0 };
 	int m_mapSize{ 0 };
+
+	Node* m_head{ nullptr };
+	Node* m_tail{ nullptr };
 };
 
