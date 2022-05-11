@@ -15,6 +15,18 @@ int main() {
 	auto poseIds = m->find(poseId1);    // 找到poseid1脚下以及周围8格的所有id
 	m->update(poseId1, 300, 400);
 	m->remove(poseId2);
+
+	for (auto item : poseIds)
+	{
+		std::cout << item << std::endl;
+	}
+
+	poseIds = m->find(poseId1);    // 找到poseid1脚下以及周围8格的所有id
+	for (auto item : poseIds)
+	{
+		std::cout << item << std::endl;
+	}
+
 	delete m;
 	return 0;
 }

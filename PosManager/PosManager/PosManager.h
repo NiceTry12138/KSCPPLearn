@@ -10,10 +10,24 @@ public:
 	void remove(int _id);
 	void init(int _blockSize, int _mapSize);
 
-protected:
-	void _add(int _id, int _posX, int _posY);
-	void _leaveBlock(int _id);
+	PosManager();
+	~PosManager();
 
+protected:
+	enum class Axis
+	{
+		AXIS_X,
+		AXIS_Y
+	};
+
+	Node* _add(int _id, int _posX, int _posY);
+	Node* _add(Node* _node);
+	Node* _leaveBlock(int _id);
+	Node* _findByID(int _id);
+
+	static void insertBefore(Node* _before, Node* _next, Axis _asix);
+	static void removeNode(Node* _node);
+	static int getLessVal(int val, int modval);
 private:
 	int m_blockSize{ 0 };
 	int m_mapSize{ 0 };
