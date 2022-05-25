@@ -18,18 +18,29 @@ public:
 	}
 };
 
-void test()
-{
-	Binder<Test> binder;
-	binder.bindVar("p1", offsetof(Test, p1));
-	binder.bindFunc("test1", &Test::test1);
-	binder.bindStaticFunc("test2", Test::test2);
+struct A {
+	void func() {
+		std::cout << "void A::func()" << std::endl;
+	}
+	int a;
+	double d;
+	char c;
+	bool b;
+	float f;
+	std::string str;
+};
 
-	Test t1;
+int main() {
+	Binder<A> bd;
+	bd.bindVar("a", offsetof(A, a));
+	bd.bindVar("b", offsetof(A, b));
+	bd.bindVar("c", offsetof(A, c));
+	bd.bindVar("d", offsetof(A, d));
+	bd.bindVar("f", offsetof(A, f));
+	bd.bindVar("str", offsetof(A, str));
 
-	int* p1 = binder.findVar<int>(&t1, "p1");
-	std::cout << *p1 << std::endl;
-
-	binder.callFunc(&t1, "test1", nullptr);
-	binder.callStaticFunc("test2", nullptr);
+	A a;
+	a.a = 1;
+	std::cout << bd.findVar<int>(&a, "a") << std::endl;
+	return 0;
 }
