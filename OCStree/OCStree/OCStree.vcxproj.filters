@@ -15,34 +15,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="OCTree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="OCTreeNode.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="OCTreeLaze.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="OCTreeLazeNode.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="OCTree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="OCTreeNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="OCTreeLaze.cpp">
+    <ClCompile Include="OCtreeManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="OCTreeLazeNode.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="OCTreeNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="OCtreeManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

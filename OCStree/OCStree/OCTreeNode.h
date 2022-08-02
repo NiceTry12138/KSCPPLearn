@@ -1,143 +1,55 @@
 #pragma once
-
-#include <map>
-#include <tuple>
 #include <vector>
-#include <iostream>
-using namespace std;
+#include <string>
+#include "Vector3.h"
 
-#define __SG(n, m) std::get<n>(m)
+#define IS_1(v) (v == 1 ? 1 : -1)
 
-enum class OCTreeNodeDirection {
-	FRONT_LEFT_BOTTOM,				// 前、左、下
-	FRONT_LEFT_TOP,					// 前、左、上
-	FRONT_RIGHT_BOTTOM,				// 前、右、下
-	FRONT_RIGHT_TOP,				// 前、右、上
-	REAR_LEFT_BOTTOM,				// 后、左、下
-	REAR_LEFT_TOP,					// 后、左、上
-	REAR_RIGHT_BOTTOM,				// 后、右、下
-	REAR_RIGHT_TOP					// 后、右、上
+struct NodeData {
+	Vector3 _Position;
+	std::string _Data;
+
+	NodeData(Vector3 _Pos, std::string _D) {
+		_Data = _D;
+		_Position = _Pos;
+	}
 };
 
-struct OCTreeNode {
-	int _Data{ 0 };
+class OCTreeNode
+{
+public:
+	OCTreeNode();
+	~OCTreeNode();
 
-	int _XMax, _XMin;
-	int _YMax, _YMin;
-	int _ZMax, _ZMin;
+	OCTreeNode(OCTreeNode* _Parent, Vector3 _Pos, Size _Size);
 
-	std::map<OCTreeNodeDirection, OCTreeNode*> _Nodes;
+	OCTreeNode(Vector3 _Pos, Size _Size);
 
-	static const std::vector<OCTreeNodeDirection> Directions() {
-		return
-		{
-			OCTreeNodeDirection::FRONT_LEFT_BOTTOM,
-			OCTreeNodeDirection::FRONT_LEFT_TOP,
-			OCTreeNodeDirection::FRONT_RIGHT_BOTTOM,
-			OCTreeNodeDirection::FRONT_RIGHT_TOP,
-			OCTreeNodeDirection::REAR_LEFT_BOTTOM,
-			OCTreeNodeDirection::REAR_LEFT_TOP,
-			OCTreeNodeDirection::REAR_RIGHT_BOTTOM,
-			OCTreeNodeDirection::REAR_RIGHT_TOP
-		};
-	}
+	void SetParent(OCTreeNode* _Parent);
+	OCTreeNode* GetParent();
 
-	static std::tuple<int, int, int, int, int, int> GetBox(OCTreeNodeDirection Direction, OCTreeNode* Node) {
-		return GetBox(Direction, Node->_XMin, Node->_XMax, Node->_YMin, Node->_YMax, Node->_ZMin, Node->_ZMax);
-	}
+	OCTreeNode* GetRoot();
+	bool IsPointInSection(Vector3 _Pos);
 
-	static std::tuple<int, int, int, int, int, int> GetBox(OCTreeNodeDirection Direction, int XMin, int XMax, int YMin, int YMax, int ZMin, int ZMax) {
-		std::tuple<int, int, int, int, int, int> result{ 0, 0, 0, 0, 0, 0 };
-		switch (Direction)
-		{
-		case OCTreeNodeDirection::FRONT_LEFT_BOTTOM:
-			result = std::make_tuple(XMax, (XMax + XMin) / 2, (YMax + YMin) / 2, YMin, (ZMin + ZMax) / 2, ZMin);
-			break;
-		case OCTreeNodeDirection::FRONT_LEFT_TOP:
-			result = std::make_tuple(XMax, (XMax + XMin) / 2, (YMax + YMin) / 2, YMin, ZMax, (ZMin + ZMax) / 2);
-			break;
-		case OCTreeNodeDirection::FRONT_RIGHT_BOTTOM:
-			result = std::make_tuple(XMax, (XMax + XMin) / 2, YMax, (YMax + YMin) / 2, (ZMin + ZMax) / 2, ZMin);
-			break;
-		case OCTreeNodeDirection::FRONT_RIGHT_TOP:
-			result = std::make_tuple(XMax, (XMax + XMin) / 2, YMax, (YMax + YMin) / 2, ZMax, (ZMin + ZMax) / 2);
-			break;
-		case OCTreeNodeDirection::REAR_LEFT_BOTTOM:
-			result = std::make_tuple((XMax + XMin) / 2, XMin, (YMax + YMin) / 2, YMin, (ZMin + ZMax) / 2, ZMin);
-			break;
-		case OCTreeNodeDirection::REAR_LEFT_TOP:
-			result = std::make_tuple((XMax + XMin) / 2, XMin, (YMax + YMin) / 2, YMin, ZMax, (ZMin + ZMax) / 2);
-			break;
-		case OCTreeNodeDirection::REAR_RIGHT_BOTTOM:
-			result = std::make_tuple((XMax + XMin) / 2, XMin, YMax, (YMax + YMin) / 2, (ZMin + ZMax) / 2, ZMin);
-			break;
-		case OCTreeNodeDirection::REAR_RIGHT_TOP:
-			result = std::make_tuple((XMax + XMin) / 2, XMin, YMax, (YMax + YMin) / 2, ZMax, (ZMin + ZMax) / 2);
-			break;
-		}
-		return result;
-	}
+	int GetDepth();
 
-	static OCTreeNodeDirection GetDirection(int XMin, int XMax, int YMin, int YMax, int ZMin, int ZMax, int PosX, int PosY, int PosZ) {
-		bool isFront = true, isRight = true, isTop = true;
+	bool DeleteNode(OCTreeNode* _Node);
 
-		if (PosX >= XMin && PosX < (XMin + XMax) / 2)
-		{
-			isFront = false;
-		}
+	void InsertData(std::string _NodeName, Vector3 _Position);
 
-		if (PosY >= YMin && PosY < (YMin + YMax) / 2)
-		{
-			isRight = false;
-		}
+	void PrintData();
+protected:
+	void AddData(std::string _NodeName, Vector3 _Position);
+	void SplitSelf();
 
-		if (PosZ >= ZMin && PosZ < (ZMin + ZMax) / 2)
-		{
-			isTop = false;
-		}
+private:
+	int Depth;								// 深度
 
+	Vector3 CenterPos;						// 中心点坐标
+	Size Extend;							// 方格大小
 
-	}
-
-	OCTreeNode(int XMax, int Xmin, int YMax, int YMin, int ZMax, int ZMin) {
-		_Nodes[OCTreeNodeDirection::FRONT_LEFT_BOTTOM] = nullptr;
-		_Nodes[OCTreeNodeDirection::FRONT_LEFT_TOP] = nullptr;
-		_Nodes[OCTreeNodeDirection::FRONT_RIGHT_BOTTOM] = nullptr;
-		_Nodes[OCTreeNodeDirection::FRONT_RIGHT_TOP] = nullptr;
-		_Nodes[OCTreeNodeDirection::REAR_LEFT_BOTTOM] = nullptr;
-		_Nodes[OCTreeNodeDirection::REAR_LEFT_TOP] = nullptr;
-		_Nodes[OCTreeNodeDirection::REAR_RIGHT_BOTTOM] = nullptr;
-		_Nodes[OCTreeNodeDirection::REAR_RIGHT_TOP] = nullptr;
-
-		_XMax = XMax; _XMin = Xmin; _YMax = YMax; _YMin = YMin;  _ZMax = ZMax; _ZMin = ZMin;
-	}
-
-	OCTreeNode(std::tuple<int, int, int, int, int, int> InitData) :
-		OCTreeNode(__SG(0, InitData), __SG(1, InitData), __SG(2, InitData), __SG(3, InitData), __SG(4, InitData), __SG(5, InitData))
-	{
-	}
-
-	void SetOCTreeNodeDirection(OCTreeNode* _node, OCTreeNodeDirection _direction) {
-		_Nodes[_direction] = _node;
-	}
-
-	OCTreeNode* GetOCTreeNodeByDirection(OCTreeNodeDirection _direction) {
-		return _Nodes[_direction];
-	}
-
-	bool IsPointInBox(int _posX, int _posY, int _posZ) {
-		return _posX >= _XMin && _posX <= _XMax &&
-			_posY >= _YMin && _posY <= _YMax &&
-			_posZ >= _YMin && _posZ <= _ZMax;
-	}
-
-	bool HasChild() {
-		for (auto it = _Nodes.begin(); it != _Nodes.end(); ++it)
-		{
-			if (it->second != nullptr) {
-				return true;
-			}
-		}
-		return false;
-	}
+	OCTreeNode* Root{ nullptr };			// 根节点
+	OCTreeNode* Parent{ nullptr };			// 父节点
+	std::vector<NodeData> DataList;			// 数据列表
+	std::vector<OCTreeNode*> Children;		// 子节点数组
 };

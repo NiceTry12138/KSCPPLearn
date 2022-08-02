@@ -139,17 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="OCTree.h" />
-    <ClInclude Include="OCTreeLaze.h" />
-    <ClInclude Include="OCTreeLazeNode.h" />
-    <ClInclude Include="OCTreeNode.h" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OCtreeManager.cpp" />
+    <ClCompile Include="OCTreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="OCTree.cpp" />
-    <ClCompile Include="OCTreeLaze.cpp" />
-    <ClCompile Include="OCTreeLazeNode.cpp" />
-    <ClCompile Include="OCTreeNode.cpp" />
+    <ClInclude Include="OCtreeManager.h" />
+    <ClInclude Include="OCTreeNode.h" />
+    <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
