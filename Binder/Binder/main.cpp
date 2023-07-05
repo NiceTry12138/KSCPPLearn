@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Binder.h"
+#include "Binder1.h"
 using namespace std;
 class Test
 {
@@ -18,10 +19,14 @@ public:
 	}
 };
 
+std::string printBool(bool val) {
+	return val ? std::string("true") : std::string("false");
+}
+
 void test()
 {
 	Binder<Test> binder;
-	binder.bindVar("p1", offsetof(Test, p1));
+	binder.bindVar("p1", offsetof_binder(Test, p1));
 	binder.bindFunc("test1", &Test::test1);
 	binder.bindStaticFunc("test2", Test::test2);
 
@@ -34,7 +39,22 @@ void test()
 	binder.callStaticFunc("test2", nullptr);
 }
 
+void test1() {
+	Binder1 binder;
+	
+	Test t1;
+	t1.p1 = 2;
+
+	binder.bindVar("p1", offsetof(Test, p1));
+	binder.bindVar("p2", offsetof(Test, p2));
+	binder.bindVar("p3", offsetof(Test, p3));
+	int val1 = binder.findVar<Test, int>(&t1, "p1");
+	bool val2 = binder.findVar<Test, bool>(&t1, "p2");
+	std::string val3 = binder.findVar<Test, std::string>(&t1, "p3");
+	std::cout << "p1 = "  << val1 << " p2 = " << printBool(val2) << " p3 = " << val3 << std::endl;
+}
+
 int main() {
-	test();
+	test1();
 	return 0;
 }

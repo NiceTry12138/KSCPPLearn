@@ -21,9 +21,15 @@
     <ClCompile Include="Binder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Binder1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Binder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Binder1.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

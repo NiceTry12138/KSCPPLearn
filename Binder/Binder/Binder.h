@@ -3,7 +3,7 @@
 #include <map>
 #include <string>
 
-#define offsetof(Field, FieldName) &Field::FieldName
+#define offsetof_binder(Field, FieldName) &Field::FieldName
 
 #define FindVale(TheMap, Key, Obj) 		\
 if (m_IntInfo.find(FieldName) != m_IntInfo.end())\
